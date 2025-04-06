@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vapi Chat</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f0f2f5;
+        }
+        .container {
+            text-align: center;
+        }
+        h1 {
+            color: #333;
+            margin-bottom: 30px;
+            font-size: 32px;
+        }
+        #chatButton {
+            padding: 15px 30px;
+            font-size: 18px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        #chatButton:hover {
+            background-color: #45a049;
+        }
+        #chatButton.recording {
+            background-color: #f44336;
+        }
+        #chatButton.recording:hover {
+            background-color: #d32f2f;
+        }
+        #status {
+            display: none;
+        }
+    </style>
+    <script src="vapi-browser.js"></script>
+</head>
+<body>
+    <div class="container">
+        <h1>Now Assist</h1>
+        <button id="chatButton">📞 Start Call</button>
+        <div id="status"></div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const PUBLIC_KEY = '620453a0-b598-4db3-bdaf-b22d17c19fba';
+            const ASSISTANT_ID = '321ebbcd-c1bd-4dd8-9c5b-9cb98005f716';
+            const statusDiv = document.getElementById('status');
+            
+            // Check if Vapi is properly exposed
+            if (!window.Vapi) {
+                console.error('Vapi not found in window object:', window.Vapi);
+                return;
+            }
+            
+            // Log what we have in the Vapi object
+            console.log('Vapi object:', window.Vapi);
+            
+            // Try to create a new instance
+            let vapi;
+            try {
+                if (typeof window.Vapi === 'function') {
+                    // If Vapi is a constructor
+                    vapi = new window.Vapi(PUBLIC_KEY);
+                } else if (window.Vapi.default && typeof window.Vapi.default === 'function') {
+                    // If Vapi is exported as default
+                    vapi = new window.Vapi.default(PUBLIC_KEY);
+                } else {
+                    throw new Error('Could not find Vapi constructor');
+                }
+            } catch (error) {
+                console.error('Error initializing Vapi:', error);
+                return;
+            }
+            
+            const chatButton = document.getElementById('chatButton');
+            let isChatting = false;
+
+            // Set up event listeners
+            vapi.on('call-start', () => {
+                console.log('Call started');
+                isChatting = true;
+                chatButton.textContent = '🗣️ Call in Progress';
+                chatButton.classList.add('recording');
+            });
+
+            vapi.on('call-end', () => {
+                console.log('Call ended');
+                isChatting = false;
+                chatButton.textContent = '📞 Start Call';
+                chatButton.classList.remove('recording');
+            });
+
+            vapi.on('message', (message) => {
+                console.log('Message:', message);
+                // Message text is now hidden (not updating statusDiv)
+            });
+
+            vapi.on('error', (error) => {
+                console.error('Error:', error);
+                // Only log errors to console, don't display them
+            });
+
+            // Button click handler
+            chatButton.addEventListener('click', () => {
+                if (!isChatting) {
+                    vapi.start(ASSISTANT_ID);
+                } else {
+                    chatButton.textContent = '☎️ End Call';
+                    vapi.stop();
+                }
+            });
+        });
+    </script>
+</body>
+</html> 
