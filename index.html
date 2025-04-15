@@ -14,26 +14,109 @@
             margin: 0;
             background-color: #f0f2f5;
         }
+        .phone-frame {
+            width: 390px;
+            height: 844px;
+            background-color: #000;
+            border-radius: 50px;
+            padding: 12px;
+            position: relative;
+            box-shadow: 0 0 50px rgba(0,0,0,0.3);
+        }
+        .phone-screen {
+            width: 100%;
+            height: 100%;
+            background-color: white;
+            border-radius: 40px;
+            overflow: hidden;
+            position: relative;
+        }
+        .notch {
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 150px;
+            height: 30px;
+            background-color: #000;
+            border-bottom-left-radius: 15px;
+            border-bottom-right-radius: 15px;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .side-button {
+            position: absolute;
+            width: 3px;
+            height: 60px;
+            background-color: #000;
+            right: -3px;
+        }
+        .side-button.top {
+            top: 100px;
+        }
+        .side-button.bottom {
+            top: 150px;
+        }
         .container {
             text-align: center;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 20px;
+            box-sizing: border-box;
         }
-        h1 {
+        .content-area {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+        .logo-container {
+            margin: 0 0 20px 0;
+            cursor: pointer;
+            position: relative;
+            display: inline-block;
+            padding: 10px;
+        }
+        .logo-container img {
+            max-width: 200px;
+            max-height: 100px;
+        }
+        .logo-container h1 {
             color: #333;
-            margin-bottom: 30px;
+            margin: 0;
             font-size: 32px;
         }
+        .logo-container .dropdown-arrow {
+            position: absolute;
+            right: -25px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #666;
+            font-size: 14px;
+        }
         #chatButton {
-            padding: 15px 30px;
-            font-size: 18px;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            transition: all 0.3s;
             background-color: #4CAF50;
             color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background-color 0.3s;
+            margin: 0 auto 40px;
         }
         #chatButton:hover {
-            background-color: #45a049;
+            transform: scale(1.1);
         }
         #chatButton.recording {
             background-color: #f44336;
@@ -41,24 +124,306 @@
         #chatButton.recording:hover {
             background-color: #d32f2f;
         }
+        .call-timer {
+            position: absolute;
+            top: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 36px;
+            font-weight: 500;
+            color: #000;
+            display: none;
+            padding: 5px 15px;
+            border-radius: 20px;
+            background-color: rgba(255,255,255,0.8);
+            letter-spacing: 1px;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        }
+        .call-timer.active {
+            display: block;
+        }
         #status {
             display: none;
+        }
+        .config-link {
+            display: none;
+        }
+        .status-bar {
+            position: absolute;
+            top: 20px;
+            left: 0;
+            right: 0;
+            display: flex;
+            justify-content: space-between;
+            padding: 0 35px;
+            z-index: 999;
+            color: #000;
+            font-family: "system-ui", -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            font-size: 16px;
+            font-weight: 700;
+            zoom: 105%;
+        }
+        .time-display {
+            font-size: 16px;
+            letter-spacing: 0.5px;
+            margin-left: 15px;
+        }
+        .status-icons {
+            display: flex;
+            align-items: center;
+            gap: 1px;
+            transform: scale(1.1, 1);
+            transform-origin: right center;
+        }
+        .signal-icon, .wifi-icon, .battery-icon {
+            color: #000;
+        }
+        .signal-icon {
+            width: 18px;
+            height: 12px;
+        }
+        .wifi-icon {
+            width: 16px;
+            height: 12px;
+            cursor: pointer;
+        }
+        .battery-icon {
+            width: 22px;
+            height: 12px;
+            margin-left: 1px;
+        }
+        .current-assistant {
+            margin-bottom: 20px;
+            padding: 10px;
+            background-color: #e8f5e9;
+            border-radius: 5px;
+            display: inline-block;
+        }
+        .no-assistant {
+            color: #f44336;
+            margin-bottom: 20px;
+        }
+        .assistant-selector {
+            position: relative;
+            margin-bottom: 20px;
+            z-index: 1000;
+        }
+        .select-button {
+            padding: 8px 12px;
+            background-color: #2196F3;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        .select-button:hover {
+            background-color: #1976D2;
+        }
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: white;
+            min-width: 200px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            border-radius: 5px;
+            margin-top: 5px;
+            max-height: 300px;
+            overflow-y: auto;
+            top: 100%;
+            left: 0;
+        }
+        .dropdown-content.show {
+            display: block;
+        }
+        .assistant-option {
+            padding: 10px 15px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border-bottom: 1px solid #eee;
+        }
+        .assistant-option:last-child {
+            border-bottom: none;
+        }
+        .assistant-option:hover {
+            background-color: #f5f5f5;
+        }
+        .assistant-option.selected {
+            background-color: #e8f5e9;
+        }
+        .assistant-option img {
+            width: 24px;
+            height: 24px;
+            object-fit: contain;
+        }
+        .assistant-option .name {
+            flex-grow: 1;
+        }
+        .powered-by {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            opacity: 0.8;
+        }
+        .powered-by-text {
+            font-size: 16px;
+            font-weight: 400;
+            color: #666;
+            margin-bottom: 8px;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        }
+        .powered-by-logo {
+            max-width: 150px;
+            max-height: 40px;
         }
     </style>
     <script src="vapi-browser.js"></script>
 </head>
 <body>
-    <div class="container">
-        <h1>Now Assist</h1>
-        <button id="chatButton">📞 Start Call</button>
-        <div id="status"></div>
+    <div class="phone-frame">
+        <div class="notch"></div>
+        <div class="side-button top"></div>
+        <div class="side-button bottom"></div>
+        <div class="status-bar">
+            <div class="time-display" id="timeDisplay"></div>
+            <div class="status-icons">
+                <svg class="signal-icon" viewBox="0 0 20 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <rect x="1" y="7" width="3" height="9" rx="1" fill="currentColor"/>
+                    <rect x="6" y="5" width="3" height="11" rx="1" fill="currentColor"/>
+                    <rect x="11" y="3" width="3" height="13" rx="1" fill="currentColor"/>
+                    <rect x="16" y="1" width="3" height="15" rx="1" fill="currentColor"/>
+                </svg>
+                <a href="config.html">
+                    <svg class="wifi-icon" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M8 2C4.5 2 1.5 3.5 0 6L8 16L16 6C14.5 3.5 11.5 2 8 2Z" fill="currentColor"/>
+                    </svg>
+                </a>
+                <svg class="battery-icon" viewBox="0 0 24 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <rect x="1" y="1" width="18" height="14" rx="2" stroke="currentColor" stroke-width="2" fill="none"/>
+                    <rect x="3" y="3" width="14" height="10" rx="1" fill="currentColor"/>
+                    <rect x="22" y="5" width="2" height="6" rx="1" fill="currentColor"/>
+                </svg>
+            </div>
+        </div>
+        <div class="phone-screen">
+            <a href="config.html" class="config-link">⚙️ Configure</a>
+            <div class="container">
+                <div class="content-area">
+                    <div class="assistant-selector">
+                        <div class="logo-container" id="logoContainer" onclick="toggleDropdown()">
+                            <!-- Logo or title will be inserted here -->
+                            <span class="dropdown-arrow">▼</span>
+                        </div>
+                        <div class="dropdown-content" id="assistantDropdown">
+                            <!-- Assistant options will be inserted here -->
+                        </div>
+                    </div>
+                    <div class="powered-by">
+                        <div class="powered-by-text">works with</div>
+                        <img src="https://www.ausa.org/sites/default/files/2023-04/servicenow.png" alt="ServiceNow" class="powered-by-logo">
+                    </div>
+                    <div id="assistantInfo">
+                        <!-- Current assistant info will be inserted here -->
+                    </div>
+                </div>
+                <div class="call-timer" id="callTimer">00:00</div>
+                <button id="chatButton">📞</button>
+                <div id="status"></div>
+            </div>
+        </div>
     </div>
+
+    <!-- Audio element for dialing tone -->
+    <audio id="dialingTone" preload="auto">
+        <source src="https://nextcloud.mwdm.cloud/public.php/dav/files/LSLdF5g93QBN9Cw/" type="audio/mpeg">
+    </audio>
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const PUBLIC_KEY = '620453a0-b598-4db3-bdaf-b22d17c19fba';
-            const ASSISTANT_ID = '321ebbcd-c1bd-4dd8-9c5b-9cb98005f716';
             const statusDiv = document.getElementById('status');
+            const logoContainer = document.getElementById('logoContainer');
+            const assistantInfo = document.getElementById('assistantInfo');
+            const assistantDropdown = document.getElementById('assistantDropdown');
+            
+            // Load assistants and current selection from localStorage
+            const assistants = JSON.parse(localStorage.getItem('vapiAssistants') || '[]');
+            let currentAssistantId = localStorage.getItem('currentAssistantId');
+            let currentAssistant = assistants.find(a => a.id === currentAssistantId);
+
+            // Populate dropdown
+            function populateDropdown() {
+                assistantDropdown.innerHTML = '';
+                assistants.forEach(assistant => {
+                    const option = document.createElement('div');
+                    option.className = `assistant-option ${assistant.id === currentAssistantId ? 'selected' : ''}`;
+                    option.onclick = () => selectAssistant(assistant);
+                    option.innerHTML = `
+                        ${assistant.logoUrl ? `<img src="${assistant.logoUrl}" alt="Logo">` : ''}
+                        <span class="name">${assistant.name}</span>
+                    `;
+                    assistantDropdown.appendChild(option);
+                });
+            }
+
+            // Select assistant
+            function selectAssistant(assistant) {
+                currentAssistantId = assistant.id;
+                currentAssistant = assistant;
+                localStorage.setItem('currentAssistantId', currentAssistantId);
+                updateDisplay();
+                toggleDropdown();
+            }
+
+            // Update display
+            function updateDisplay() {
+                if (currentAssistant) {
+                    assistantInfo.innerHTML = '';
+                    logoContainer.innerHTML = '';
+                    if (currentAssistant.logoUrl) {
+                        const img = document.createElement('img');
+                        img.src = currentAssistant.logoUrl;
+                        img.alt = 'Logo';
+                        logoContainer.appendChild(img);
+                    } else {
+                        const h1 = document.createElement('h1');
+                        h1.textContent = currentAssistant.name;
+                        logoContainer.appendChild(h1);
+                    }
+                    const arrow = document.createElement('span');
+                    arrow.className = 'dropdown-arrow';
+                    arrow.textContent = '▼';
+                    logoContainer.appendChild(arrow);
+                } else {
+                    assistantInfo.innerHTML = `
+                        <div class="no-assistant">
+                            No assistant selected. Please select one from the dropdown or configure a new one.
+                        </div>
+                    `;
+                    logoContainer.innerHTML = '<h1>Vapi Chat</h1><span class="dropdown-arrow">▼</span>';
+                }
+            }
+
+            // Toggle dropdown
+            window.toggleDropdown = function() {
+                assistantDropdown.classList.toggle('show');
+            }
+
+            // Close dropdown when clicking outside
+            document.addEventListener('click', function(event) {
+                if (!event.target.closest('.assistant-selector')) {
+                    assistantDropdown.classList.remove('show');
+                }
+            });
+
+            // Initial setup
+            populateDropdown();
+            updateDisplay();
             
             // Check if Vapi is properly exposed
             if (!window.Vapi) {
@@ -88,20 +453,48 @@
             
             const chatButton = document.getElementById('chatButton');
             let isChatting = false;
+            let callStartTime;
+            let timerInterval;
+
+            // Update timer display
+            function updateTimer() {
+                if (!callStartTime) return;
+                const now = new Date();
+                const diff = Math.floor((now - callStartTime) / 1000);
+                const minutes = Math.floor(diff / 60).toString().padStart(2, '0');
+                const seconds = (diff % 60).toString().padStart(2, '0');
+                document.getElementById('callTimer').textContent = `${minutes}:${seconds}`;
+            }
 
             // Set up event listeners
             vapi.on('call-start', () => {
                 console.log('Call started');
                 isChatting = true;
-                chatButton.textContent = '🗣️ Call in Progress';
+                
+                // Stop dialing tone
+                document.getElementById('dialingTone').pause();
+                
+                chatButton.innerHTML = '<img src="https://img.icons8.com/?size=100&id=53439&format=png" alt="End Call" style="filter: brightness(0) invert(1); width: 24px; height: 24px;">';
+                chatButton.style.backgroundColor = ''; // Remove inline style so CSS class can take effect
                 chatButton.classList.add('recording');
+                callStartTime = new Date();
+                document.getElementById('callTimer').classList.add('active');
+                timerInterval = setInterval(updateTimer, 1000);
             });
 
             vapi.on('call-end', () => {
                 console.log('Call ended');
                 isChatting = false;
-                chatButton.textContent = '📞 Start Call';
+                
+                // Ensure dialing tone is stopped
+                document.getElementById('dialingTone').pause();
+                
+                chatButton.innerHTML = '<img src="https://img.icons8.com/?size=100&id=9730&format=png" alt="Start Call" style="filter: brightness(0) invert(1); width: 24px; height: 24px;">';
                 chatButton.classList.remove('recording');
+                chatButton.style.backgroundColor = '#4CAF50'; // Reset to green
+                clearInterval(timerInterval);
+                document.getElementById('callTimer').classList.remove('active');
+                document.getElementById('callTimer').textContent = '00:00';
             });
 
             vapi.on('message', (message) => {
@@ -116,13 +509,42 @@
 
             // Button click handler
             chatButton.addEventListener('click', () => {
+                if (!currentAssistant) {
+                    alert('Please select an assistant first');
+                    return;
+                }
+
                 if (!isChatting) {
-                    vapi.start(ASSISTANT_ID);
+                    // Show bright green button with hang-up icon during the connection phase
+                    chatButton.innerHTML = '<img src="https://img.icons8.com/?size=100&id=53439&format=png" alt="End Call" style="filter: brightness(0) invert(1); width: 24px; height: 24px;">';
+                    chatButton.style.backgroundColor = '#34C759'; // Brighter iPhone-like green
+                    
+                    // Play dialing tone
+                    const dialingTone = document.getElementById('dialingTone');
+                    dialingTone.currentTime = 0;
+                    dialingTone.play();
+                    
+                    vapi.start(currentAssistant.id);
                 } else {
-                    chatButton.textContent = '☎️ End Call';
                     vapi.stop();
                 }
             });
+            
+            // Initialize call button with the phone icon
+            chatButton.innerHTML = '<img src="https://img.icons8.com/?size=100&id=9730&format=png" alt="Start Call" style="filter: brightness(0) invert(1); width: 24px; height: 24px;">';
+
+            // Update time display
+            function updateTime() {
+                const now = new Date();
+                const hours = now.getHours();
+                const minutes = now.getMinutes();
+                const formattedTime = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`;
+                document.getElementById('timeDisplay').textContent = formattedTime;
+            }
+            
+            // Update time every minute
+            updateTime();
+            setInterval(updateTime, 60000);
         });
     </script>
 </body>
