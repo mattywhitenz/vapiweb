@@ -167,3 +167,49 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 ```
+
+# Vapi Web Chat Application
+
+This is a simple web application for interacting with Vapi assistants.
+
+## Running with Docker
+
+### Build the Docker image
+
+```bash
+docker build -t vapiweb .
+```
+
+### Run the container
+
+```bash
+docker run -p 8998:8998 vapiweb
+```
+
+The application will be available at http://localhost:8998
+
+## Running with Docker Compose
+
+```bash
+docker-compose up -d
+```
+
+To stop the application:
+
+```bash
+docker-compose down
+```
+
+## Manual Installation
+
+1. Install Node.js
+2. Install dependencies:
+   ```bash
+   npm install
+   ```
+3. Start the server:
+   ```bash
+   node server.js
+   ```
+
+The application will be available at http://localhost:8998
