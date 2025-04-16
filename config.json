@@ -1,0 +1,10 @@
+{
+  "assistants": [
+    {
+      "name": "test",
+      "id": "sdfdsf",
+      "logoUrl": "sdfsdf"
+    }
+  ],
+  "currentAssistantId": "sdfdsf"
+}

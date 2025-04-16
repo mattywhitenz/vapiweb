@@ -32,6 +32,56 @@
             overflow: hidden;
             position: relative;
         }
+        
+        /* Mobile responsive styles */
+        @media (max-width: 767px) {
+            .phone-frame {
+                width: 100%;
+                height: 100vh;
+                padding: 0;
+                border-radius: 0;
+                box-shadow: none;
+            }
+            .phone-screen {
+                border-radius: 0;
+            }
+            .notch, .side-button {
+                display: none;
+            }
+            body {
+                background-color: white;
+            }
+        }
+        
+        /* Small mobile phones */
+        @media (max-width: 375px) {
+            .logo-container h1 {
+                font-size: 24px;
+            }
+            .logo-container img {
+                max-width: 160px;
+            }
+            .call-timer {
+                font-size: 28px;
+            }
+            .powered-by-text {
+                font-size: 14px;
+            }
+            .powered-by-logo {
+                max-width: 120px;
+            }
+        }
+        
+        /* Medium-sized phones */
+        @media (min-width: 376px) and (max-width: 425px) {
+            .logo-container h1 {
+                font-size: 28px;
+            }
+            .logo-container img {
+                max-width: 180px;
+            }
+        }
+        
         .notch {
             position: absolute;
             top: 0;
