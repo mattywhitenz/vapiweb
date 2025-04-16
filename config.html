@@ -297,10 +297,23 @@
             let currentEditIndex = -1;
             let currentLockIndex = -1;
             let isLockAction = true;
+            let assistants = [];
 
-            // Load saved assistants
-            let assistants = JSON.parse(localStorage.getItem('vapiAssistants') || '[]');
-            renderAssistants();
+            // Load assistants from server
+            fetchAssistants();
+
+            function fetchAssistants() {
+                fetch('/api/assistants')
+                    .then(response => response.json())
+                    .then(data => {
+                        assistants = data;
+                        renderAssistants();
+                    })
+                    .catch(error => {
+                        console.error('Error fetching assistants:', error);
+                        alert('Failed to load assistants. Please try again.');
+                    });
+            }
 
             // Preview logo when URL changes
             logoUrlInput.addEventListener('input', function() {
@@ -328,25 +341,55 @@
                     id: document.getElementById('assistantId').value,
                     logoUrl: logoUrlInput.value
                 };
-                assistants.push(assistant);
-                saveAssistants();
-                form.reset();
-                logoPreview.style.display = 'none';
-                renderAssistants();
+                
+                fetch('/api/assistants', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(assistant),
+                })
+                .then(response => response.json())
+                .then(data => {
+                    assistants = data;
+                    form.reset();
+                    logoPreview.style.display = 'none';
+                    renderAssistants();
+                })
+                .catch(error => {
+                    console.error('Error adding assistant:', error);
+                    alert('Failed to add assistant. Please try again.');
+                });
             });
 
             // Edit assistant
             editForm.addEventListener('submit', function(e) {
                 e.preventDefault();
                 if (currentEditIndex >= 0) {
-                    assistants[currentEditIndex] = {
+                    const updatedAssistant = {
                         name: document.getElementById('editName').value,
                         id: document.getElementById('editId').value,
-                        logoUrl: editLogoUrlInput.value
+                        logoUrl: editLogoUrlInput.value,
+                        locked: assistants[currentEditIndex].locked || false
                     };
-                    saveAssistants();
-                    closeModal();
-                    renderAssistants();
+                    
+                    fetch(`/api/assistants/${currentEditIndex}`, {
+                        method: 'PUT',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify(updatedAssistant),
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        assistants = data;
+                        closeModal();
+                        renderAssistants();
+                    })
+                    .catch(error => {
+                        console.error('Error updating assistant:', error);
+                        alert('Failed to update assistant. Please try again.');
+                    });
                 }
             });
 
@@ -376,10 +419,6 @@
                 });
             }
 
-            function saveAssistants() {
-                localStorage.setItem('vapiAssistants', JSON.stringify(assistants));
-            }
-
             window.editAssistant = function(index) {
                 const assistant = assistants[index];
                 if (assistant.locked) {
@@ -401,9 +440,23 @@
                     id: assistant.id,
                     logoUrl: assistant.logoUrl
                 };
-                assistants.push(copy);
-                saveAssistants();
-                renderAssistants();
+                
+                fetch('/api/assistants', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(copy),
+                })
+                .then(response => response.json())
+                .then(data => {
+                    assistants = data;
+                    renderAssistants();
+                })
+                .catch(error => {
+                    console.error('Error copying assistant:', error);
+                    alert('Failed to copy assistant. Please try again.');
+                });
             };
 
             window.deleteAssistant = function(index) {
@@ -413,9 +466,18 @@
                     return;
                 }
                 if (confirm('Are you sure you want to delete this assistant?')) {
-                    assistants.splice(index, 1);
-                    saveAssistants();
-                    renderAssistants();
+                    fetch(`/api/assistants/${index}`, {
+                        method: 'DELETE',
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        assistants = data;
+                        renderAssistants();
+                    })
+                    .catch(error => {
+                        console.error('Error deleting assistant:', error);
+                        alert('Failed to delete assistant. Please try again.');
+                    });
                 }
             };
 
@@ -445,13 +507,26 @@
                 
                 if (password === '0109') {
                     if (currentLockIndex >= 0) {
-                        if (!assistants[currentLockIndex].hasOwnProperty('locked')) {
-                            assistants[currentLockIndex].locked = false;
-                        }
-                        assistants[currentLockIndex].locked = isLockAction;
-                        saveAssistants();
-                        renderAssistants();
-                        closePasswordModal();
+                        const assistant = {...assistants[currentLockIndex]};
+                        assistant.locked = isLockAction;
+                        
+                        fetch(`/api/assistants/${currentLockIndex}`, {
+                            method: 'PUT',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify(assistant),
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            assistants = data;
+                            closePasswordModal();
+                            renderAssistants();
+                        })
+                        .catch(error => {
+                            console.error('Error updating assistant lock status:', error);
+                            alert('Failed to update assistant lock status. Please try again.');
+                        });
                     }
                 } else {
                     alert('Incorrect password!');

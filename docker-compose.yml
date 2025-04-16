@@ -2,12 +2,23 @@ version: '3'
 
 services:
   web:
-    build: .
+    image: node:18-alpine
     ports:
-      - "8998:3000"
+      - "8998:8998"
     environment:
-      - PORT=3000
+      - PORT=8998
     volumes:
-      - .:/app
-      - /app/node_modules
-    restart: unless-stopped 
+      - config-data:/app/config-data
+    command: >
+      sh -c "apk add --no-cache git &&
+             git clone https://github.com/mattywhitenz/vapiweb.git /app &&
+             cd /app &&
+             npm install &&
+             mkdir -p /app/config-data &&
+             ln -sf /app/config-data/config.json /app/config.json &&
+             node server.js"
+    restart: unless-stopped
+
+volumes:
+  config-data:
+    driver: local 

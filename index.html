@@ -352,10 +352,41 @@
             const assistantInfo = document.getElementById('assistantInfo');
             const assistantDropdown = document.getElementById('assistantDropdown');
             
-            // Load assistants and current selection from localStorage
-            const assistants = JSON.parse(localStorage.getItem('vapiAssistants') || '[]');
-            let currentAssistantId = localStorage.getItem('currentAssistantId');
-            let currentAssistant = assistants.find(a => a.id === currentAssistantId);
+            // Load assistants and current selection from server
+            let assistants = [];
+            let currentAssistantId = null;
+            let currentAssistant = null;
+
+            // Fetch assistants from the server
+            function fetchAssistants() {
+                fetch('/api/assistants')
+                    .then(response => response.json())
+                    .then(data => {
+                        assistants = data;
+                        fetchCurrentAssistant();
+                    })
+                    .catch(error => {
+                        console.error('Error fetching assistants:', error);
+                    });
+            }
+
+            // Fetch current assistant ID from the server
+            function fetchCurrentAssistant() {
+                fetch('/api/current-assistant')
+                    .then(response => response.json())
+                    .then(data => {
+                        currentAssistantId = data.currentAssistantId;
+                        currentAssistant = assistants.find(a => a.id === currentAssistantId);
+                        populateDropdown();
+                        updateDisplay();
+                    })
+                    .catch(error => {
+                        console.error('Error fetching current assistant:', error);
+                    });
+            }
+
+            // Initial data load
+            fetchAssistants();
 
             // Populate dropdown
             function populateDropdown() {
@@ -376,7 +407,20 @@
             function selectAssistant(assistant) {
                 currentAssistantId = assistant.id;
                 currentAssistant = assistant;
-                localStorage.setItem('currentAssistantId', currentAssistantId);
+                
+                // Save current assistant ID to server
+                fetch('/api/current-assistant', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ currentAssistantId: assistant.id }),
+                })
+                .then(response => response.json())
+                .catch(error => {
+                    console.error('Error saving current assistant:', error);
+                });
+                
                 updateDisplay();
                 toggleDropdown();
             }
@@ -406,7 +450,7 @@
                             No assistant selected. Please select one from the dropdown or configure a new one.
                         </div>
                     `;
-                    logoContainer.innerHTML = '<h1>Vapi Chat</h1><span class="dropdown-arrow">▼</span>';
+                    logoContainer.innerHTML = '<h1>NowAssist</h1><span class="dropdown-arrow">▼</span>';
                 }
             }
 
@@ -422,10 +466,6 @@
                 }
             });
 
-            // Initial setup
-            populateDropdown();
-            updateDisplay();
-            
             // Check if Vapi is properly exposed
             if (!window.Vapi) {
                 console.error('Vapi not found in window object:', window.Vapi);
